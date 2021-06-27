@@ -3,8 +3,12 @@
 
 const db=require("./db")
 const express = require('express')
+const cors = require('cors');
+
 const server = express()
+server.use(cors());
 const port = 3001
+
 server.get('/', (req, res) => {
     res.send('This is the server!')
   })

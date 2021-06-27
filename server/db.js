@@ -20,8 +20,9 @@ const User = mongoose.model('users', userSchema)
         else
         {
             //sends null if user is not premitted
+            response.status(200)
             response.json(user);
-            console.log("user can go in")
+            console.log("DB sign in respons sent")
         }
     })
     

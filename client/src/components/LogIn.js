@@ -1,4 +1,19 @@
-import {  Form, Button,Container ,Row,Col,Badge} from 'react-bootstrap'
+import {  Form, Button,Container ,Row,Col,Badge,Alert} from 'react-bootstrap'
+import React, { useState } from 'react';
+const sc=require("../services/serverCom.js");
+
+var setNotefunc=()=>{}
+
+const onSuccess=()=>
+{
+
+}
+
+const onFailure=()=>
+{
+  console.log(onFailure)
+  setNotefunc(true)
+}
 
 const onSubmit=(event)=>
 {
@@ -11,18 +26,43 @@ const onSubmit=(event)=>
   console.log("formGridPassword")
   console.log(form.formGridPassword.value)
 
+  const username=form.formGridUserName.value
+  const password=form.formGridPassword.value
+
+  
+  sc.signIn(username,password,onSuccess,onFailure)
+
+
   form.formGridUserName.value=""
   form.formGridPassword.value=""
-
+  
 }
+
+
+
+
 
 const LogIn = (props) => {
     // ...
+    const [show, setShow] = useState(false);
+    setNotefunc=setShow;
     return (
 <Form onSubmit={onSubmit} >
-<h1>
+  <h1>
   Sign in
   </h1>
+  <Alert show={show} variant="warning">
+        <Alert.Heading>Log in failed</Alert.Heading>
+        <p>
+         username or password incorrect
+        </p>
+        <hr />
+        <div className="d-flex justify-content-end">
+          <Button onClick={() => setShow(false)} variant="outline-warning">
+            Close
+          </Button>
+        </div>
+      </Alert>
   <Col>
     <Form.Group   controlId="formGridUserName">
       <Form.Label>Username</Form.Label>

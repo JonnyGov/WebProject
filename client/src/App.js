@@ -20,7 +20,12 @@ const App = (props) => {
   function requireAuth ()
   {
     if(Authenticated){ 
-      return <Todo/>
+      return (
+    <div  className="centerLarge" >
+      <Todo/>
+      </div>
+
+      )
     }
     else
     {
@@ -37,7 +42,7 @@ const App = (props) => {
           <div  className="center" >
             <Login setAuto={setAuthenticated}/>
             </div>
-          </Route>
+          </Route>  
           <Route path="/ToDo" render={requireAuth}>       
         </Route>
       </Switch>

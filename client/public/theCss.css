@@ -4,3 +4,9 @@
     border: 3px solid black;
     padding: 10px;
   }
+
+  .centerLarge {
+    margin: auto;
+    width: 80%;
+    padding: 10px;
+  }

@@ -1,9 +1,8 @@
-import { Card, Form, Button,Container ,Row,Col,Badge,Alert,Tab,ListGroup} from 'react-bootstrap'
+import { Card, Form, Button,Container ,Row,Col,Badge,Alert,Tab,ListGroup,Accordion} from 'react-bootstrap'
 import React, { useState } from 'react';
 
 
-
-const Task=({ task, index,  markTask, removeTask })=> {
+const SubTask=({ task, index,  markTask, removeTask })=> {
 
     return (
       <div>
@@ -15,6 +14,84 @@ const Task=({ task, index,  markTask, removeTask })=> {
       </div>
     );
   }
+const Task=({ task, index,  markTask, removeTask,tasks,setTasks})=> {
+
+    const addsSubTask = text => {
+        const newSubtasks = [...(task.subTasks), { isDone: false,text:text }]
+        task.subTasks=newSubtasks
+        const newTasks=tasks
+        newTasks[index]=task
+        setTasks(newTasks)
+      }
+    const removeSubTask = subIndex => {
+        const newTask = [...(task.subTasks)]
+        newTask.splice(subIndex, 1);
+        task.subTasks=newTask;
+
+        const newTasks = [...tasks]
+        newTasks[index]=task
+        setTasks(newTasks)
+      }
+
+      const markSubTask = subIndex => {
+        const newTasks = [...tasks]
+        const newTask = [...(task.subTasks)]
+        if(newTask[subIndex].isDone == true)
+        {
+            newTask[subIndex].isDone =false
+        }
+        else
+        {
+            newTask[subIndex].isDone = true;
+        }
+        
+        newTasks[index]=task
+        setTasks(newTasks);
+      };
+    return (
+        <Accordion defaultActiveKey="0">
+
+        <Card>
+          <Card.Header>
+            <Accordion.Toggle as={Button} variant="link" eventKey="1" >
+            <div >
+                <div>
+                    <span  className="float-left" style={{ textDecoration: task.isDone ? "line-through" : "" }}>{task.text}</span>
+                    
+                </div>
+            </div>
+            </Accordion.Toggle>
+                    <div>  
+                    <Button variant="outline-danger" size="sm"  className="float-right" onClick={() => removeTask(index)}>Remove</Button>
+                    <Button variant={ task.isDone ? "success" : "outline-success "}  size="sm" className="float-right" onClick={() => markTask(index)}>Done</Button>
+                    </div>
+          </Card.Header>
+          <Accordion.Collapse eventKey="1">
+            <Card.Body>
+     
+            <TaskAdder addTask={addsSubTask}/>
+                {(task.subTasks).map((subTask,index) => {
+                   return(
+                       <Card>
+                        <SubTask 
+                        key={index}
+                        index={index}
+                        task={subTask}
+                        markTask={markSubTask}
+                        removeTask={removeSubTask}/>
+                        </Card>
+                    )
+                    }
+                )}
+            
+            </Card.Body>
+          </Accordion.Collapse>
+        </Card>
+      </Accordion>
+    );
+  }
+
+
 
   const TaskAdder=({ addTask }) =>{
     const [value, setValue] = useState("");
@@ -48,7 +125,7 @@ const ToDo =({inputList})=> {
     const [tasks, setTasks] = useState(inputList.tasks);
     
       const addTask = text => {
-        const newTasks = [...tasks, { text }];
+        const newTasks = [...tasks, { isDone: false,text:text,subTasks:[] }];
         setTasks(newTasks);
       };
     
@@ -71,6 +148,7 @@ const ToDo =({inputList})=> {
         newTask.splice(index, 1);
         setTasks(newTask);
       };
+
     
     return (
     <div >
@@ -86,6 +164,8 @@ const ToDo =({inputList})=> {
                 task={task}
                 markTask={markTask}
                 removeTask={removeTask}
+                tasks={tasks} 
+                setTasks={setTasks}
                 />
               </Card.Body>
             </Card>
@@ -97,10 +177,12 @@ const ToDo =({inputList})=> {
   
 
 
-  const atask={isDone: true,text:"task"}
-  const atask2={isDone: false,text:"task2"}
+  const suBatask={isDone: true,text:"suBatask"}
+  const suBatask2={isDone: false,text:"suBatask2"}
+  const suBatask3={isDone: false,text:"suBatask3"}
 
-  const List = {name:"ListName", tasks:[atask,atask,atask2]}
+  const atask={isDone: false,text:"atask",subTasks:[suBatask,suBatask2,suBatask3]}
+  const List = {name:"ListName", tasks:[atask,atask]}
   
 
 const ToDoContainer = ({InputLists}) => {

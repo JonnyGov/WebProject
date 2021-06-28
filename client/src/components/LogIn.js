@@ -1,12 +1,17 @@
 import {  Form, Button,Container ,Row,Col,Badge,Alert} from 'react-bootstrap'
-import React, { useState } from 'react';
+import React, { useState } from 'react'
+import { useHistory } from "react-router-dom";
 const sc=require("../services/serverCom.js");
 
 var setNotefunc=()=>{}
+var setAutofunc=()=>{}
 
+var history=null
 const onSuccess=()=>
 {
-
+  console.log("LogIn: onSuccess")
+  setAutofunc(true)
+  history.push("/ToDo")
 }
 
 const onFailure=()=>
@@ -42,10 +47,13 @@ const onSubmit=(event)=>
 
 
 
-const LogIn = (props) => {
+const LogIn = ({ setAuto }) => {
     // ...
+    let History = useHistory()
+    history=History
     const [show, setShow] = useState(false);
-    setNotefunc=setShow;
+    setNotefunc=setShow
+    setAutofunc=setAuto
     return (
 <Form onSubmit={onSubmit} >
   <h1>

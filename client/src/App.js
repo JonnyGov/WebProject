@@ -1,11 +1,47 @@
-import React from 'react'
+//import React from 'react'
 import Login from './components/LogIn'
+import Todo from './components/Todo'
+import { useHistory } from "react-router-dom";
+import React, { useState } from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect
+} from "react-router-dom";
+
+
+
+
 const App = (props) => {
+  const [Authenticated, setAuthenticated] = useState(false);
+
+  function requireAuth ()
+  {
+    if(Authenticated){ 
+      return <Todo/>
+    }
+    else
+    {
+      return <Redirect to="/"/>
+    }
+  }
 
   return(
 
-    <div  className="center" >
-      <Login/>
+    <div >
+    <Router>    
+        <Switch>
+          <Route exact path="/">
+          <div  className="center" >
+            <Login setAuto={setAuthenticated}/>
+            </div>
+          </Route>
+          <Route path="/ToDo" render={requireAuth}>       
+        </Route>
+      </Switch>
+    </Router>  
     </div>
     )
   

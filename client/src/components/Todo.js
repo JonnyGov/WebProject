@@ -2,6 +2,7 @@ import { Card, Form, Button,Container ,Row,Col,Badge,Alert,Tab,ListGroup} from '
 import React, { useState } from 'react';
 
 
+
 const Task=({ task, index,  markTask, removeTask })=> {
 
     return (
@@ -26,23 +27,25 @@ const Task=({ task, index,  markTask, removeTask })=> {
     };
   
     return (
-      <Form onSubmit={handleSubmit}> 
+      <Form onSubmit={handleSubmit} > 
       <Form.Group>
-        <Form.Label><b>Tasks:</b></Form.Label>
         <Form.Control type="text" className="input" value={value} onChange={e => setValue(e.target.value)} placeholder="Add new task" />
-      </Form.Group>
-        
-        <Button   variant="primary" type="Add"className="float" size="lg">
+      </Form.Group >
+      <Form.Group >
+        <Button   variant="primary" type="Add"className="float" size="lg" block>
             Add
         </Button>
-
+        </Form.Group >
+        <Form.Group>
+        <Form.Label><b>Tasks:</b></Form.Label>
+        </Form.Group>
     </Form>
     );
   }
 
-const ToDo =()=> {
+const ToDo =({inputList})=> {
 
-    const [tasks, setTasks] = useState([]);
+    const [tasks, setTasks] = useState(inputList.tasks);
     
       const addTask = text => {
         const newTasks = [...tasks, { text }];
@@ -71,7 +74,7 @@ const ToDo =()=> {
     
     return (
     <div >
-        <h1 >Todo List</h1>
+        <h1 >{inputList.name}</h1>
         <TaskAdder addTask={addTask} />
         <div>
           {tasks.map((task, index) => (
@@ -93,31 +96,34 @@ const ToDo =()=> {
   }
   
 
-  /*
-  const ToDo = (props) => {
-    // ...1
 
+  const atask={isDone: true,text:"task"}
+  const atask2={isDone: false,text:"task2"}
+
+  const List = {name:"ListName", tasks:[atask,atask,atask2]}
+  
+
+const ToDoContainer = ({InputLists}) => {
+
+    InputLists=[List,List,List]
+
+    const [Lists, setTasks] = useState(InputLists);
     return (
 <Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
   <Row>
     <Col sm={4}>
       <ListGroup>
-        <ListGroup.Item action href="#link1">
-          Link 1
-        </ListGroup.Item>
-        <ListGroup.Item action href="#link2">
-          Link 2
-        </ListGroup.Item>
+        {Lists.map((list,index) => <ListGroup.Item action href={`#${list.name}_${index}`}> {`${list.name}`} </ListGroup.Item>)}
       </ListGroup>
     </Col>
     <Col sm={8}>
       <Tab.Content>
-        <Tab.Pane eventKey="#link1">
-            
-        </Tab.Pane>
-        <Tab.Pane eventKey="#link2">
-            
-        </Tab.Pane>
+
+        {Lists.map((list,index) => {
+        return(<Tab.Pane eventKey={`#${list.name}_${index}`}>
+             <ToDo inputList={list}/>
+            </Tab.Pane>)
+        })}
       </Tab.Content>
     </Col>
   </Row>
@@ -125,6 +131,6 @@ const ToDo =()=> {
       
   )}
 
-  */
+  
 
-  export default ToDo
+  export default ToDoContainer

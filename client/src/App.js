@@ -1,6 +1,6 @@
 //import React from 'react'
 import Login from './components/LogIn'
-import Todo from './components/Todo'
+import ToDoContainer from './components/Todo'
 import { useHistory } from "react-router-dom";
 import React, { useState } from 'react';
 import {
@@ -22,7 +22,7 @@ const App = (props) => {
     if(Authenticated){ 
       return (
     <div  className="centerLarge" >
-      <Todo/>
+      <ToDoContainer/>
       </div>
 
       )

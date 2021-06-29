@@ -57,7 +57,7 @@ const LogIn = ({ setAuto }) => {
     return (
 <Form onSubmit={onSubmit} >
   <h1>
-  Sign in
+  Log In
   </h1>
   <Alert show={show} variant="warning">
         <Alert.Heading>Log in failed</Alert.Heading>
@@ -85,8 +85,14 @@ const LogIn = ({ setAuto }) => {
 <Col>
   <Form.Group  controlId="button" >
   <Row>
-      <Col md={4}>
-          <Button type="submit">Sign in</Button>
+      <Col sm={4}>
+          <Button type="submit" block>Sign in</Button>
+         
+      </Col>
+      <Col sm={4}>
+      </Col>
+      <Col sm={4} className="float-left">
+      <Button  onClick={()=>{history.push("/Register")}} >Register</Button>
       </Col>
   </Row>
 

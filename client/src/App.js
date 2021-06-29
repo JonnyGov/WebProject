@@ -1,5 +1,6 @@
 //import React from 'react'
 import Login from './components/LogIn'
+import Register from './components/Register'
 import ToDoContainer from './components/Todo'
 import { useHistory } from "react-router-dom";
 import React, { useState } from 'react';
@@ -43,8 +44,10 @@ const App = (props) => {
             <Login setAuto={setAuthenticated}/>
             </div>
           </Route>  
-          <Route path="/ToDo" render={requireAuth}>       
-        </Route>
+          <Route path="/ToDo" render={requireAuth}></Route>
+        <div className="center">
+        <Route path="/Register" render={()=>{return(<Register/>)}}></Route>
+        </div>
       </Switch>
     </Router>  
     </div>

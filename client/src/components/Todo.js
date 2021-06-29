@@ -22,6 +22,9 @@ const Task=({ task, index,  markTask, removeTask,tasks,setTasks})=> {
         const newTasks=tasks
         newTasks[index]=task
         setTasks(newTasks)
+        //temp soul 
+        markSubTask(0)
+        markSubTask(0)
       }
     const removeSubTask = subIndex => {
         const newTask = [...(task.subTasks)]
@@ -69,7 +72,7 @@ const Task=({ task, index,  markTask, removeTask,tasks,setTasks})=> {
           <Accordion.Collapse eventKey="1">
             <Card.Body>
      
-            <TaskAdder addTask={addsSubTask}/>
+            <TaskAdder addTask={addsSubTask}size={"sm"} />
                 {(task.subTasks).map((subTask,index) => {
                    return(
                        <Card>
@@ -93,9 +96,8 @@ const Task=({ task, index,  markTask, removeTask,tasks,setTasks})=> {
 
 
 
-  const TaskAdder=({ addTask }) =>{
+  const TaskAdder=({ addTask,size }) =>{
     const [value, setValue] = useState("");
-  
     const handleSubmit = event => {
         event.preventDefault();
       if (!value) return;
@@ -109,7 +111,7 @@ const Task=({ task, index,  markTask, removeTask,tasks,setTasks})=> {
         <Form.Control type="text" className="input" value={value} onChange={e => setValue(e.target.value)} placeholder="Add new task" />
       </Form.Group >
       <Form.Group >
-        <Button   variant="primary" type="Add"className="float" size="lg" block>
+        <Button   variant="primary" type="Add"className="float" size={size} block>
             Add
         </Button>
         </Form.Group >
@@ -153,7 +155,7 @@ const ToDo =({inputList})=> {
     return (
     <div >
         <h1 >{inputList.name}</h1>
-        <TaskAdder addTask={addTask} />
+        <TaskAdder addTask={addTask}size={"lg"} />
         <div>
           {tasks.map((task, index) => (
             <Card>

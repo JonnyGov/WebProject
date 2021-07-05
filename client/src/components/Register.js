@@ -1,21 +1,79 @@
 import {  Form, Button,Container ,Row,Col,Badge,Alert} from 'react-bootstrap'
 import React, { useState } from 'react'
 import { useHistory } from "react-router-dom";
+const sc=require("../services/serverCom.js");
 
-var onSubmit=()=>{}
+var setNotefunc=()=>{}
+var setNoteTextfunc=()=>{}
+var setNoteVarfunc=()=>{}
+
+var history=null
+
+const onSuccess=()=>
+{
+  console.log("onSuccess")
+  setNoteVarfunc("success")
+  setNoteTextfunc("Registerd successfuly")
+  setNotefunc(true)
+}
+
+const onFailure=()=>
+{
+  console.log("onFailure")
+  setNoteVarfunc("warning")
+  setNoteTextfunc("User exists")
+  setNotefunc(true)
+}
+
+
+var onSubmit=(event)=>{
+
+
+  event.preventDefault();
+  
+  const form = event.currentTarget
+  console.log("formGridUserName")
+  console.log(form.formGridUserName.value)
+
+  console.log("formGridPassword")
+  console.log(form.formGridPassword.value)
+
+  console.log("formGridPasswordAgain")
+  console.log(form.formGridPasswordAgain.value)
+
+  const username=form.formGridUserName.value
+  const password=form.formGridPassword.value
+  const PasswordAgain=form.formGridPasswordAgain.value
+  if(password!==PasswordAgain){
+    setNoteTextfunc("Passwords dont match")
+    setNoteVarfunc("warning")
+    setNotefunc(true)
+    return
+  }
+  sc.register(username,password,onSuccess,onFailure)
+
+
+}
 
 const Register = ({ setAuto }) => {
     let History = useHistory()
+    history=History
     const [show, setShow] = useState(false);
+    const [notificationText,setNotificationText]=useState("empty")
+    const [notificationVariant,setNotificationVariant]=useState("warning")
+    setNotefunc=setShow
+    setNoteTextfunc=setNotificationText
+    setNoteVarfunc=setNotificationVariant
     return (
         <Form onSubmit={onSubmit}  >
         <h1 >
         Register
         </h1>
-        <Alert show={show} variant="warning">
-              <Alert.Heading>Log in failed</Alert.Heading>
+
+        <Alert show={show} variant={`${notificationVariant}`} >
+              <Alert.Heading>Registration info</Alert.Heading>
               <p>
-               username or password incorrect
+                {notificationText}
               </p>
               <hr />
               <div className="d-flex justify-content-end">

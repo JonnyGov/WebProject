@@ -20,6 +20,14 @@ server.get('/api/login/:userName/:password', (req, response) => {
     console.log(username,password)
     db.findUserAndPassword(username,password,response)
   })
+
+  server.post('/api/register/:userName/:password', (req, response) => {
+        const username=(req.params.userName).replace(':', '')
+        const password=(req.params.password).replace(':', '')
+        console.log(username,password)
+        db.addUser(username,password,response)
+      })
+
   
 server.listen(port, () => {
     console.log(` server listening at http://localhost:${port}`)

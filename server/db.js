@@ -27,4 +27,36 @@ const User = mongoose.model('users', userSchema)
     })
     
   }
-  module.exports={findUserAndPassword}
+
+
+  function addUser(username,password,response)
+  {
+    User.findOne({ username:`${username}`},function(err,user)
+    {
+        if (err)
+        {
+            response.status(404).end()
+            console.log("DB Error")
+        }   
+        else if( user!=null)
+        {
+            response.status(200)
+            response.json(null);
+            console.log("user exists in Db")
+
+        }
+        else
+        {
+
+            User({
+                username,
+                password,
+              }).save()
+              response.status(200)
+              response.send("UserRegisted")
+        }
+    })
+    
+  }
+
+  module.exports={findUserAndPassword,addUser}

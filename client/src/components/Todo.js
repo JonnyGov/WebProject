@@ -188,8 +188,10 @@ const ToDo =({inputList})=> {
   
 
 const ToDoContainer = ({InputLists}) => {
-
+  JSON.parse(JSON.stringify(List))
     InputLists=[List,List,List]
+    //creates deep copys
+    InputLists=[JSON.parse(JSON.stringify(List)),JSON.parse(JSON.stringify(List)),JSON.parse(JSON.stringify(List))]
 
     const [Lists, setTasks] = useState(InputLists);
     return (

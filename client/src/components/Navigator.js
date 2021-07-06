@@ -14,7 +14,7 @@ const Navigator = () => {
     
     if (!user.isLog){
       dropDown=<NavDropdown title={user.name} id="basic-nav-dropdown">
-              <NavDropdown.Item onClick={()=>{History.replace("/Register")}}>register</NavDropdown.Item>
+              <NavDropdown.Item onClick={()=>{History.replace("/Register")}}>Register</NavDropdown.Item>
               <NavDropdown.Item onClick={()=>{History.replace("/LogIn")}}>LogIn</NavDropdown.Item>
         <NavDropdown.Divider />
       </NavDropdown>
@@ -22,6 +22,7 @@ const Navigator = () => {
       dropDown=<NavDropdown title={user.name} id="basic-nav-dropdown">
          <NavDropdown.Item onClick={()=>{setUser({name:"guest",isLog:false}); History.replace("/Home")}}>Logout</NavDropdown.Item>
         <NavDropdown.Divider />
+        <NavDropdown.Item onClick={()=>{History.replace("/ToDo")}}>To Do List</NavDropdown.Item>
       </NavDropdown>
     }
      

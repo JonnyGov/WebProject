@@ -43,6 +43,7 @@ const App = (props) => {
     <Router>    
     <Navigator></Navigator>
         <Switch>
+         
           <Route exact path="/Login">
           <div  className="center" >
             <Login setAuto={setAuthenticated}/>
@@ -52,6 +53,7 @@ const App = (props) => {
         <div className="center">
         <Route path="/Register" render={()=>{return(<Register/>)}}></Route>
         <Route path="/Home" render={()=>{return(<Home/>)}}></Route>
+        <Route path="/" ><Redirect to="/Home"/></Route>
         </div>
           
       </Switch>

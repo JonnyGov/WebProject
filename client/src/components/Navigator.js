@@ -1,24 +1,40 @@
 import {  Navbar, Nav,NavDropdown ,Form,FormControl,Button} from 'react-bootstrap'
-const isLog=false;
-
-const Navigator = ({ setAuto }) => {
+import { useHistory } from "react-router-dom";
+import React, { useState } from 'react';
+export let SetUser
+let history = null
+const Navigator = () => {
+  let History = useHistory()
+    history= History
     // ...
+    const [user, setUser] = useState({name:"guest",isLog:false});
+    
+    SetUser=setUser
+    let dropDown=null;
+    
+    if (!user.isLog){
+      dropDown=<NavDropdown title={user.name} id="basic-nav-dropdown">
+              <NavDropdown.Item onClick={()=>{History.replace("/Register")}}>Register</NavDropdown.Item>
+              <NavDropdown.Item onClick={()=>{History.replace("/LogIn")}}>LogIn</NavDropdown.Item>
+        <NavDropdown.Divider />
+      </NavDropdown>
+    }else{
+      dropDown=<NavDropdown title={user.name} id="basic-nav-dropdown">
+         <NavDropdown.Item onClick={()=>{setUser({name:"guest",isLog:false}); History.replace("/Home")}}>Logout</NavDropdown.Item>
+        <NavDropdown.Divider />
+        <NavDropdown.Item onClick={()=>{History.replace("/ToDo")}}>To Do List</NavDropdown.Item>
+      </NavDropdown>
+    }
+     
     return (
 <Navbar bg="light" expand="lg">
-  <Navbar.Brand href="Home">ToDo-Home</Navbar.Brand>
+  <Navbar.Brand onClick={()=>{History.replace("/Home")}}>ToDo</Navbar.Brand>
   <Navbar.Toggle aria-controls="basic-navbar-nav" />
   <Navbar.Collapse id="basic-navbar-nav">
     <Nav className="mr-auto">
-      <NavDropdown title="User" id="basic-nav-dropdown">
-              <NavDropdown.Item href="Register">register</NavDropdown.Item>
-              <NavDropdown.Item href="Login">LogIn</NavDropdown.Item>
-        <NavDropdown.Divider />
-      </NavDropdown>
+    <Nav.Link onClick={()=>{History.replace("/Home")}}>Home</Nav.Link>
+      {dropDown}
     </Nav>
-    <Form inline>
-      <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-      <Button variant="outline-success">Search</Button>
-    </Form>
   </Navbar.Collapse>
 </Navbar>
     )}

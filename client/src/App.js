@@ -39,8 +39,9 @@ const App = (props) => {
   return(
 
     <div >
-       <Navigator/>
+      
     <Router>    
+    <Navigator></Navigator>
         <Switch>
           <Route exact path="/Login">
           <div  className="center" >

@@ -1,6 +1,9 @@
 import { Card, Form, Button,Container ,Row,Col,Badge,Alert,Tab,ListGroup,Accordion} from 'react-bootstrap'
 import React, { useState } from 'react';
 
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1)
+}
 
 const SubTask=({ task, index,  markTask, removeTask })=> {
 
@@ -72,7 +75,7 @@ const Task=({ task, index,  markTask, removeTask,tasks,setTasks})=> {
           <Accordion.Collapse eventKey="1">
             <Card.Body>
      
-            <TaskAdder addTask={addsSubTask}size={"sm"} />
+            <TaskAdder addTask={addsSubTask}size={"sm"} name={"sub task"} />
                 {(task.subTasks).map((subTask,index) => {
                    return(
                        <Card>
@@ -96,7 +99,7 @@ const Task=({ task, index,  markTask, removeTask,tasks,setTasks})=> {
 
 
 
-  const TaskAdder=({ addTask,size }) =>{
+  const TaskAdder=({ addTask,size,name }) =>{
     const [value, setValue] = useState("");
     const handleSubmit = event => {
         event.preventDefault();
@@ -108,7 +111,7 @@ const Task=({ task, index,  markTask, removeTask,tasks,setTasks})=> {
     return (
       <Form onSubmit={handleSubmit} > 
       <Form.Group>
-        <Form.Control type="text" className="input" value={value} onChange={e => setValue(e.target.value)} placeholder="Add new task" />
+        <Form.Control type="text" className="input" value={value} onChange={e => setValue(e.target.value)} placeholder={`Add new ${name}`} />
       </Form.Group >
       <Form.Group >
         <Button   variant="primary" type="Add"className="float" size={size} block>
@@ -116,7 +119,9 @@ const Task=({ task, index,  markTask, removeTask,tasks,setTasks})=> {
         </Button>
         </Form.Group >
         <Form.Group>
-        <Form.Label><b>Tasks:</b></Form.Label>
+        <Form.Label>
+          <b>{`${capitalizeFirstLetter(name)}s:`}</b>
+          </Form.Label>
         </Form.Group>
     </Form>
     );
@@ -155,7 +160,7 @@ const ToDo =({inputList})=> {
     return (
     <div >
         <h1 >{inputList.name}</h1>
-        <TaskAdder addTask={addTask}size={"lg"} />
+        <TaskAdder addTask={addTask}size={"lg"} name={"task"} />
         <div>
           {tasks.map((task, index) => (
             <Card>
@@ -192,24 +197,32 @@ const ToDoContainer = ({InputLists}) => {
     InputLists=[List,List,List]
     //creates deep copys
     InputLists=[JSON.parse(JSON.stringify(List)),JSON.parse(JSON.stringify(List)),JSON.parse(JSON.stringify(List))]
+    const [Lists, setLists] = useState(InputLists);
 
-    const [Lists, setTasks] = useState(InputLists);
+    const addList = text => {
+      const newList = [...Lists, {name:text, tasks:[]}];
+      setLists(newList);
+    };
+
     return (
 <Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
   <Row>
     <Col sm={4}>
       <ListGroup>
+      <TaskAdder addTask={addList}size={"sm"} name={"list"}/>
         {Lists.map((list,index) => <ListGroup.Item action href={`#${list.name}_${index}`}> {`${list.name}`} </ListGroup.Item>)}
+        
       </ListGroup>
     </Col>
     <Col sm={8}>
       <Tab.Content>
-
+        
         {Lists.map((list,index) => {
         return(<Tab.Pane eventKey={`#${list.name}_${index}`}>
              <ToDo inputList={list}/>
             </Tab.Pane>)
         })}
+        
       </Tab.Content>
     </Col>
   </Row>

@@ -9,5 +9,16 @@ const user = {
       required: [true, 'Created date is required']
     }
 }
+const tasks={
+  title:{
+    type: String
+  },
+  body:{
+    type : String
+  },
+  isDone:{
+    type: Boolean
+  }
+}
 
-module.exports={user}
+module.exports={user, tasks}

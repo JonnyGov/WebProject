@@ -24,7 +24,7 @@ const App = (props) => {
   {
     if(Authenticated){ 
       return (
-    <div  className="centerLarge" >
+    <div  >
       <ToDoContainer/>
       </div>
 

@@ -44,13 +44,26 @@ var onSubmit=(event)=>{
   const username=form.formGridUserName.value
   const password=form.formGridPassword.value
   const PasswordAgain=form.formGridPasswordAgain.value
-  if(password!==PasswordAgain){
+  if(password!==PasswordAgain ){
     setNoteTextfunc("Passwords dont match")
     setNoteVarfunc("warning")
     setNotefunc(true)
     return
   }
+  if(username.length<4 || username.length>10){
+    setNoteTextfunc("username lenght should be between 4 and 10")
+    setNoteVarfunc("warning")
+    setNotefunc(true)
+    return
+  }
+  if(password.length<4 || password.length>10){
+    setNoteTextfunc("Password lenght should be between 4 and 10")
+    setNoteVarfunc("warning")
+    setNotefunc(true)
+    return
+  }
   sc.register(username,password,onSuccess,onFailure)
+
 
 
 }

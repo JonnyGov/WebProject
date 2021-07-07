@@ -7,18 +7,12 @@ const user = {
     password: {
       type: String,
       required: [true, 'Created date is required']
+    },
+    lists:
+    {
+      type:Object,
     }
 }
-const tasks={
-  title:{
-    type: String
-  },
-  body:{
-    type : String
-  },
-  isDone:{
-    type: Boolean
-  }
-}
 
-module.exports={user, tasks}
+
+module.exports={user}

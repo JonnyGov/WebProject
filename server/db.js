@@ -29,10 +29,11 @@ const User = mongoose.model('users', userSchema)
   }
 
 
-  function addUser(username,password,response)
+  function addUser(username,password,list,response)
   {
-    User.findOne({ username:`${username}`},function(err,user)
+    User.findOne({ username:`${username}`,password:`${password}`},function(err,user)
     {
+      
         if (err)
         {
             response.status(404).end()
@@ -47,10 +48,10 @@ const User = mongoose.model('users', userSchema)
         }
         else
         {
-
+            let jsonlist= JSON.stringify(list)
             User({
                 username,
-                password,
+                password,lists:jsonlist
               }).save()
               response.status(200)
               response.send("UserRegisted")
@@ -59,4 +60,37 @@ const User = mongoose.model('users', userSchema)
     
   }
 
-  module.exports={findUserAndPassword,addUser}
+
+ function updateUser(username,password,lists,response){
+    User.findOneAndRemove({ username:`${username}`,password:`${password}`},function(err,user)
+    {
+      
+        if (err)
+        {
+            response.status(404).end()
+            console.log("DB Error or user dosent exist in DB")
+            console.log(err)
+
+        }   
+        else
+                 {
+                    let jsonlist= JSON.stringify(lists)
+                     User({
+                        username:username,
+                         password:password,lists:jsonlist
+                      }).save()
+                       response.status(200)
+                       response.send("UserUpdated")
+                 }
+      
+    })
+   
+ }
+
+   
+
+
+
+
+
+  module.exports={findUserAndPassword,addUser,updateUser}

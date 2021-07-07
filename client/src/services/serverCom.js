@@ -39,6 +39,29 @@ export function signIn(username,password,onSuccess,onFailure) {
             onSuccess()
         }
     }).catch(error => console.log(error))
-  }
+  
+    }
+
+    export function update(user,onSuccess,onFailure) {
+        console.log("update")
+        const request = axios.put(`${baseUrl}/api/update/user`,JSON.stringify(user),
+        {headers: {
+          // Overwrite Axios's automatically set Content-Type
+          'Content-Type': 'application/json'
+        }
+      })
+        return request.then((response) => {
+            console.log(response.data)
+            if (response.data==null)
+            {
+                onFailure()
+            }
+            else
+            {
+                onSuccess()
+            }
+        }).catch(error => console.log(error))
+      }
+
 
 

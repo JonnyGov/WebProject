@@ -6,6 +6,8 @@ const ListsComponent = ({InputLists,size,setList,setInputLists})=>{
     const newList = [...InputLists, {name:text, tasks:[]}];
     setInputLists(newList);
   };
+  if (InputLists == null) InputLists=[]
+  if (!Array.isArray(InputLists)) InputLists=[]
   return (
 <Col sm={size}>
       <ListGroup>
@@ -28,7 +30,6 @@ const SubTask=({ subTask, removeSubTask,index})=> {
     
   };
   useEffect(()=>{
-    debugger
     _updateData()
 
   },[isDone])
@@ -71,7 +72,6 @@ const Task=({ myTask,removeTask,index})=> {
         
       }
       useEffect(()=>{
-        debugger
         _updateData()
 
       },[subTasks,isDone])
@@ -164,7 +164,6 @@ const ListDetails =({list,size})=> {
         list.tasks=newTask
       };
       useEffect(()=>{
-        debugger
         _updateData()
 
       },[tasks])
@@ -195,18 +194,6 @@ const ListDetails =({list,size})=> {
 let showTaskDetails
 const TaskForm= ()=>{
   }
-
-
-  const suBatask={isDone: true,text:"suBatask"}
-  const suBatask2={isDone: false,text:"suBatask2"}
-  const suBatask3={isDone: false,text:"suBatask3"}
-
-  const atask={isDone: false,text:"atask",subTasks:[suBatask,suBatask2,suBatask3],date: "1990-03-04",desc:"afljhasdfhasdjkfh asdfhljasdhf /n akdfj;asd"}
-  const atask1={isDone: false,text:"atask1",subTasks:[suBatask,suBatask2,suBatask3],date: "1990-05-04",desc:"afljhasdfhasdjsadsadkfh asdfhljasdhf /n akdfj;asd"}
-  const atask2={isDone: false,text:"atask2",subTasks:[suBatask,suBatask2,suBatask3],date: "1990-04-04",desc:"afljhasdfhasdjkfasdasdh asdfhljasdhf /n akdfj;asd"}
-  const atask3={isDone: false,text:"atask3",subTasks:[suBatask,suBatask2,suBatask3],date: "1990-06-04",desc:"afljhasdfhasdjsadsadkfh asdfhljasdhf /n akdfj;asd"}
-  const List1 = {name:"ListName1", tasks:[atask1,atask2]}
-  const List2 = {name:"ListName2", tasks:[atask,atask3]}
  
 let _setShowTaskDetails=null
 let _setSelectedTask=null
@@ -214,19 +201,25 @@ let _selectedTask=null;
 let _showTaskDetails=null
 let _updateData
 export let global_setData
+let test=0
 const ToDoContainer = () => {
   
     const [data,setData]= useState({username:"",password:"",lists:"[]"})
     const [InputLists,setInputLists] = useState(JSON.parse(data.lists))
     global_setData=setData
+
     function updateData(){
-      update({username:data.username,password:data.password,lists:InputLists},()=>{},()=>{})
+      test++
+      setTimeout(() => {
+        update({username:data.username,password:data.password,lists:InputLists},()=>{},()=>{})
+        test--
+      }, test*2000)
+      
     }
     _updateData=updateData
     useEffect(()=>
       {
         
-        //debugger
           if (data==null || data== undefined){
             setData({username:"",password:"",lists:"[]"})
             setInputLists(JSON.parse(data.lists))
@@ -244,8 +237,7 @@ const ToDoContainer = () => {
             return
           }
           if (typeof(InputLists)!="string"){
-            debugger
-            update({username:data.username,password:data.password,lists:InputLists},()=>{},()=>{})
+              updateData()
             return
           }
           
@@ -289,6 +281,9 @@ const ToDoContainer = () => {
       const title=form.task.value
       const desc=form.taskdesc.value
       const date=form.date.value
+      selectedTask.text=title
+      selectedTask.desc=desc
+      selectedTask.date=date
       event.preventDefault();
 
     }

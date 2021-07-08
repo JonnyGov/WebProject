@@ -1,17 +1,16 @@
-import { Card, Form, Button,Container ,Row,Col,Badge,Alert,Tab,ListGroup,Accordion} from 'react-bootstrap'
+import { Card, Form, Button,Container ,Row,Col,Badge,Alert,Tab,ListGroup,Accordion,Modal} from 'react-bootstrap'
 import React, { useState,useEffect } from 'react';
-
-const ListsComponent = ({InputLists,size,setList})=>{
-  const [lists, setLists] = useState(InputLists)
+import {update} from '../services/serverCom'
+const ListsComponent = ({InputLists,size,setList,setInputLists})=>{
   const addList = text => {
-    const newList = [...lists, {name:text, tasks:[]}];
-    setLists(newList);
+    const newList = [...InputLists, {name:text, tasks:[]}];
+    setInputLists(newList);
   };
   return (
 <Col sm={size}>
       <ListGroup>
       <TaskAdder addTask={addList}size={"sm"} name={"list"}/>
-        {lists.map((list,index) => <ListGroup.Item onClick={()=> setList(list)} action href={`#${list.name}_${index}`}> {`${list.name}`} </ListGroup.Item>)}
+        {InputLists.map((list,index) => <ListGroup.Item onClick={()=> setList(list)} action href={`#${list.name}_${index}`}> {`${list.name}`} </ListGroup.Item>)}
         
       </ListGroup>
     </Col>
@@ -28,6 +27,11 @@ const SubTask=({ subTask, removeSubTask,index})=> {
     setIsDone(subTask.isDone)
     
   };
+  useEffect(()=>{
+    debugger
+    _updateData()
+
+  },[isDone])
   if (subTask==null) return null;
   else
     return (
@@ -46,6 +50,7 @@ const Task=({ myTask,removeTask,index})=> {
     const addsSubTask = text => {
         const newSubtasks = [...(myTask.subTasks), { isDone: false,text:text }]
         myTask.subTasks=newSubtasks
+        setSubTasks(myTask.subTasks)
       }
     const removeSubTask = subIndex => {
       
@@ -61,14 +66,15 @@ const Task=({ myTask,removeTask,index})=> {
         
       };
       function showDetails(){
-        if (_selectedTask!==myTask){
-         if (_setSelectedTask!=null) _setSelectedTask(myTask)
-          _setShowTaskDetails(true)
-        }
-        else{
-          _setShowTaskDetails(!_showTaskDetails)
-        }
+        showTaskDetails();
+        _setSelectedTask(myTask)
+        
       }
+      useEffect(()=>{
+        debugger
+        _updateData()
+
+      },[subTasks,isDone])
     return (
         <Accordion defaultActiveKey="0">
 
@@ -142,7 +148,7 @@ const Task=({ myTask,removeTask,index})=> {
     );
   }
 
-const ListDetails =({list})=> {
+const ListDetails =({list,size})=> {
 
     const [tasks, setTasks] = useState(list.tasks);
   
@@ -157,8 +163,14 @@ const ListDetails =({list})=> {
         setTasks(newTask);
         list.tasks=newTask
       };
+      useEffect(()=>{
+        debugger
+        _updateData()
 
+      },[tasks])
+      if (list==undefined || list == null) return null
     return (
+      <Col sm={size}>
     <div >
         <h1 >{list.name}</h1>
         <TaskAdder addTask={addTask}size={"lg"} name={"task"} />
@@ -176,38 +188,13 @@ const ListDetails =({list})=> {
           ))}
         </div>
       </div>
+      </Col>
     );
   };
   
-
-
+let showTaskDetails
 const TaskForm= ()=>{
-  const [selectedTask, setSelectedTask] = useState({text:"",desc:"",date:""});
-  _setSelectedTask=setSelectedTask
-  _selectedTask=selectedTask
-  const onSubmit=(event)=>
-  {
-    event.preventDefault();
   }
-  
-    return (<Form onSubmit={onSubmit}>
-    <Form.Group controlId="task">
-      <Form.Label>Task</Form.Label>
-      <Form.Control type="text" defaultValue={_selectedTask.text}/>
-    </Form.Group>
-    <Form.Group controlId="taskdesc">
-      <Form.Label>Description</Form.Label>
-      <Form.Control  as="textarea" rows={3} defaultValue={_selectedTask.desc} />
-    </Form.Group>
-    <Form.Group controlId="date">
-      <Form.Label> Due Date:</Form.Label>
-      <Form.Control type="date"  defaultValue={_selectedTask.date} />
-    </Form.Group>
-    <Button variant="secondary" type="submit">
-      Save Changes
-    </Button>
-  </Form>
-      )}
 
 
   const suBatask={isDone: true,text:"suBatask"}
@@ -225,40 +212,126 @@ let _setShowTaskDetails=null
 let _setSelectedTask=null
 let _selectedTask=null;
 let _showTaskDetails=null
-const ToDoContainer = ({InputLists}) => {
+let _updateData
+export let global_setData
+const ToDoContainer = () => {
+  
+    const [data,setData]= useState({username:"",password:"",lists:"[]"})
+    const [InputLists,setInputLists] = useState(JSON.parse(data.lists))
+    global_setData=setData
+    function updateData(){
+      update({username:data.username,password:data.password,lists:InputLists},()=>{},()=>{})
+    }
+    _updateData=updateData
+    useEffect(()=>
+      {
+        
+        //debugger
+          if (data==null || data== undefined){
+            setData({username:"",password:"",lists:"[]"})
+            setInputLists(JSON.parse(data.lists))
+            return
+          }
+          
+          setInputLists(JSON.parse(data.lists))
+          
 
-  //JSON.parse(JSON.stringify(List))
-    InputLists=[List1,List2]
+      },[data]
+    )
+    useEffect(()=>
+      {
+          if (data.username=="" || data== undefined){
+            return
+          }
+          if (typeof(InputLists)!="string"){
+            debugger
+            update({username:data.username,password:data.password,lists:InputLists},()=>{},()=>{})
+            return
+          }
+          
+
+      },[InputLists]
+    )
     const [list,setList]= useState(InputLists[0]);
     
-    //creates deep copys
-    //InputLists=[JSON.parse(JSON.stringify(List)),JSON.parse(JSON.stringify(List)),JSON.parse(JSON.stringify(List))]
+  //JSON.parse(JSON.stringify(List))
+    //InputLists=[List1,List2]
+   
+    function testList(list){
+      if (list!=null) return <ListDetails  list={list} setList={setList} size={7}/>
+    }
+    
     return (
-<Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
-  <Row>
-  <ListsComponent InputLists = {InputLists} size={4} setList={setList} ></ListsComponent>     
-  <ListDetails  list={list} setList={setList}/>
-  <TaskDetails />
+<Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1" >
+  <Row style={{ marginLeft: 15, marginRight: 15 }}>
+  <ListsComponent setInputLists={setInputLists} InputLists = {InputLists} size={4} setList={setList} ></ListsComponent> 
+      
+  {testList(list)}
+  <TaskDetails/>
   </Row>
 </Tab.Container>
       
   )
   }
   const TaskDetails=()=>{     
-    
-    const [showTaskDetails, setShowTaskDetails] = useState(false);
-    const [selectedTask, setSelectedTask] = useState({text:"",desc:"",date:""});
+    const EmptyTask= {text:"",desc:"",date:"1111-11-11"}
+    const [selectedTask, setSelectedTask] = useState(EmptyTask);
+    const [show, setShow] = useState(false);
+  
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    showTaskDetails=handleShow
     _setSelectedTask=setSelectedTask
     _selectedTask=selectedTask
-    _setShowTaskDetails=setShowTaskDetails
-    _showTaskDetails=showTaskDetails
-    if(showTaskDetails){
-    return(
+    const onSubmit=(event)=>
+    {
+      const form = event.currentTarget
+      const title=form.task.value
+      const desc=form.taskdesc.value
+      const date=form.date.value
+      event.preventDefault();
+
+    }
+      return (
       
-          <Col  sm={4}>
-            <TaskForm selectedTask={selectedTask}/>
-          </Col> 
-      )
-    }else return null
+      <>
+        <Modal show={show} onHide={handleClose}>
+        <Form onSubmit={onSubmit}>
+          <Modal.Header closeButton>
+            <Modal.Title>Task Details</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+          
+      <Form.Group controlId="task">
+        <Form.Label>Task</Form.Label>
+        <Form.Control type="text" defaultValue={selectedTask.text}/>
+      </Form.Group>
+      <Form.Group controlId="taskdesc">
+        <Form.Label>Description</Form.Label>
+        <Form.Control  as="textarea" rows={3} defaultValue={selectedTask.desc} />
+      </Form.Group>
+      <Form.Group controlId="date">
+        <Form.Label> Due Date:</Form.Label>
+        <Form.Control type="date"  defaultValue={selectedTask.date} />
+      </Form.Group>
+      
+    
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button variant="primary" type="submit">
+        Save Changes
+      </Button>
+            
+          </Modal.Footer>
+          </Form>
+        </Modal>
+     
+      
+      
+    </>
+        )
   }
   export default ToDoContainer

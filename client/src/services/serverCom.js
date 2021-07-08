@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 import {SetUser} from '../components/Navigator'; 
+import {global_setData} from '../components/Todo'; 
 
 const baseUrl = 'http://localhost:3001'
 
@@ -15,8 +16,11 @@ export function signIn(username,password,onSuccess,onFailure) {
         }
         else
         {
+            
             onSuccess()
             SetUser({name:username,isLog:true})
+            global_setData(response.data)
+            
            
         }
         

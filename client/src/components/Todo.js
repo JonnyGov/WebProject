@@ -30,9 +30,14 @@ const SubTask=({ subTask, removeSubTask,index})=> {
     
   };
   useEffect(()=>{
+    setIsDone(subTask.isDone)
     _updateData()
 
   },[isDone])
+  useEffect(()=>{
+    setIsDone(subTask.isDone)
+
+  },[subTask])
   if (subTask==null) return null;
   else
     return (
@@ -76,11 +81,11 @@ const Task=({ myTask,removeTask,index})=> {
       }
       useEffect(()=>{
         _updateData()
-
+        setIsDone(myTask.isDone)
       },[subTasks,isDone])
       useEffect(()=>{
         setTaskName(myTask.text)
-
+        setIsDone(myTask.isDone)
       },[myTask.text])
     return (
         <Accordion defaultActiveKey="0">
@@ -202,13 +207,12 @@ let showTaskDetails
 const TaskForm= ()=>{
   }
  
-let _setShowTaskDetails=null
 let _setSelectedTask=null
-let _selectedTask=null;
-let _showTaskDetails=null
+let _selectedTask=null
 let _updateData
 export let global_setData
 let counter=0
+let maxCounter=0
 const ToDoContainer = () => {
   
     const [localData,setData]= useState(data)
@@ -216,12 +220,24 @@ const ToDoContainer = () => {
     global_setData=setData
 
     function updateData(){
+      
+      
       counter++
+      const myCounter=counter
+      if (myCounter==1) maxCounter=1
+      if (maxCounter<myCounter)
+      maxCounter=myCounter
+     
       setTimeout(() => {
+        debugger
+        if (myCounter<maxCounter){
+          counter--
+          return
+        } 
         data.lists=JSON.stringify(InputLists)
         update({username:localData.username,password:localData.password,lists:InputLists},()=>{},()=>{})
         counter--
-      }, counter*2000)
+      }, 3000)
       
     }
     _updateData=updateData

@@ -6,6 +6,7 @@ import {global_setData} from '../components/Todo';
 const baseUrl = 'http://localhost:3001'
 export let data={username:"",password:"",lists:"[]"}
 export function signIn(username,password,onSuccess,onFailure) {
+    data={username:"",password:"",lists:"[]"}
     const request = axios.get(`${baseUrl}/api/login/:${username}/:${password}`,  { crossdomain: true })
         return request.then((response) => {
         console.log(response.data)

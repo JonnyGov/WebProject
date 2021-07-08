@@ -33,7 +33,7 @@ var i=0
 server.put('/api/update/user', (req, response) => {
         //console.log(req.body)
         console.log("Update!", i)
-        db.updateUser(req.body.username,req.body.password,req.body.Lists,response)
+        db.updateUser(req.body.username,req.body.password,req.body.lists,response)
         i=i+1
       })
 

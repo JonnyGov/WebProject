@@ -45,9 +45,11 @@ const SubTask=({ subTask, removeSubTask,index})=> {
       </div>
     );
   }
+  let _setTaskName
 const Task=({ myTask,removeTask,index})=> {
   const [isDone,setIsDone]= useState(myTask.isDone)
   const [subTasks,setSubTasks]= useState(myTask.subTasks)
+  const [taskName,setTaskName] = useState(myTask.text)
     const addsSubTask = text => {
         const newSubtasks = [...(myTask.subTasks), { isDone: false,text:text }]
         myTask.subTasks=newSubtasks
@@ -67,6 +69,7 @@ const Task=({ myTask,removeTask,index})=> {
         
       };
       function showDetails(){
+        _setTaskName=setTaskName
         showTaskDetails();
         _setSelectedTask(myTask)
         
@@ -75,6 +78,10 @@ const Task=({ myTask,removeTask,index})=> {
         _updateData()
 
       },[subTasks,isDone])
+      useEffect(()=>{
+        setTaskName(myTask.text)
+
+      },[myTask.text])
     return (
         <Accordion defaultActiveKey="0">
 
@@ -83,7 +90,7 @@ const Task=({ myTask,removeTask,index})=> {
             <Accordion.Toggle as={Button} variant="link" eventKey="1" >
             <div >
                 <div>
-                    <span  className="float-left" style={{ textDecoration: myTask.isDone ? "line-through" : "" }}>{myTask.text}</span>
+                    <span  className="float-left" style={{ textDecoration: myTask.isDone ? "line-through" : "" }}>{taskName}</span>
                     
                 </div>
             </div>
@@ -277,6 +284,7 @@ const ToDoContainer = () => {
     _selectedTask=selectedTask
     const onSubmit=(event)=>
     {
+      event.preventDefault();
       const form = event.currentTarget
       const title=form.task.value
       const desc=form.taskdesc.value
@@ -284,7 +292,10 @@ const ToDoContainer = () => {
       selectedTask.text=title
       selectedTask.desc=desc
       selectedTask.date=date
-      event.preventDefault();
+      _setTaskName(title)
+      _updateData()
+      setShow(false)
+      
 
     }
       return (

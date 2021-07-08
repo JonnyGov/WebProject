@@ -1,6 +1,6 @@
 import { Card, Form, Button,Container ,Row,Col,Badge,Alert,Tab,ListGroup,Accordion,Modal} from 'react-bootstrap'
 import React, { useState,useEffect } from 'react';
-import {update} from '../services/serverCom'
+import {update,data} from '../services/serverCom'
 const ListsComponent = ({InputLists,size,setList,setInputLists})=>{
   const addList = text => {
     const newList = [...InputLists, {name:text, tasks:[]}];
@@ -208,39 +208,40 @@ let _selectedTask=null;
 let _showTaskDetails=null
 let _updateData
 export let global_setData
-let test=0
+let counter=0
 const ToDoContainer = () => {
   
-    const [data,setData]= useState({username:"",password:"",lists:"[]"})
-    const [InputLists,setInputLists] = useState(JSON.parse(data.lists))
+    const [localData,setData]= useState(data)
+    const [InputLists,setInputLists] = useState(JSON.parse(localData.lists))
     global_setData=setData
 
     function updateData(){
-      test++
+      counter++
       setTimeout(() => {
-        update({username:data.username,password:data.password,lists:InputLists},()=>{},()=>{})
-        test--
-      }, test*2000)
+        data.lists=JSON.stringify(InputLists)
+        update({username:localData.username,password:localData.password,lists:InputLists},()=>{},()=>{})
+        counter--
+      }, counter*2000)
       
     }
     _updateData=updateData
     useEffect(()=>
       {
         
-          if (data==null || data== undefined){
+          if (localData==null || localData== undefined){
             setData({username:"",password:"",lists:"[]"})
-            setInputLists(JSON.parse(data.lists))
+            setInputLists(JSON.parse(localData.lists))
             return
           }
           
-          setInputLists(JSON.parse(data.lists))
+          setInputLists(JSON.parse(localData.lists))
           
 
-      },[data]
+      },[localData]
     )
     useEffect(()=>
       {
-          if (data.username=="" || data== undefined){
+          if (localData.username=="" || localData== undefined){
             return
           }
           if (typeof(InputLists)!="string"){

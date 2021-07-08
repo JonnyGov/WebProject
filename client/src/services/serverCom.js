@@ -4,7 +4,7 @@ import {SetUser} from '../components/Navigator';
 import {global_setData} from '../components/Todo'; 
 
 const baseUrl = 'http://localhost:3001'
-
+export let data={username:"",password:"",lists:"[]"}
 export function signIn(username,password,onSuccess,onFailure) {
     const request = axios.get(`${baseUrl}/api/login/:${username}/:${password}`,  { crossdomain: true })
         return request.then((response) => {
@@ -19,6 +19,7 @@ export function signIn(username,password,onSuccess,onFailure) {
             
             onSuccess()
             SetUser({name:username,isLog:true})
+            data=response.data
             global_setData(response.data)
             
            

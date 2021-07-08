@@ -1,10 +1,10 @@
+const Mutex = require('async-mutex').Mutex;
 const mongoose = require('mongoose')
 const schemas=require('./schemas')
 
 url="mongodb+srv://new_user1:5LZMx3NSsooYdD19@cluster0.zu8ll.mongodb.net/web_project?retryWrites=true&w=majority"
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
 console.log("connected!")
-
 
 const userSchema = new mongoose.Schema(schemas.user)
 const User = mongoose.model('users', userSchema)
@@ -60,11 +60,12 @@ const User = mongoose.model('users', userSchema)
     
   }
 
-
- function updateUser(username,password,lists,response){
+  let clientLock = new Mutex()
+    async function updateUser(username,password,lists,response){
+        let release = await clientLock.acquire();
     User.findOneAndRemove({ username:`${username}`,password:`${password}`},function(err,user)
     {
-      
+        
         if (err)
         {
             response.status(404).end()
@@ -82,14 +83,10 @@ const User = mongoose.model('users', userSchema)
                        response.status(200)
                        response.send("UserUpdated")
                  }
-      
+        release()      
     })
    
  }
-
-   
-
-
 
 
 

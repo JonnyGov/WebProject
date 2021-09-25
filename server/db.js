@@ -3,6 +3,8 @@ const mongoose = require('mongoose')
 const schemas=require('./schemas')
 
 url="mongodb+srv://new_user1:5LZMx3NSsooYdD19@cluster0.zu8ll.mongodb.net/web_project?retryWrites=true&w=majority"
+url="mongodb+srv://yona:1234@cluster0.gzmkq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
 console.log("connected!")
 
